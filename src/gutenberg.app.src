@@ -1,0 +1,13 @@
+%% -*- mode: erlang; -*-
+
+{application, gutenberg,
+ [
+  {description, "Gutenberg: Riak Map/Reduce Examples in Lisp Flavored Erlang"},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {env, []}
+ ]}.
