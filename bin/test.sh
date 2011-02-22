@@ -13,6 +13,9 @@ curl -v -X POST \
    ,{"reduce":{"language":"erlang"
               ,"module":"gutenberg"
               ,"function":"reduce_word_count"}}
+   ,{"reduce":{"language":"erlang"
+              ,"module":"riak_kv_mapreduce"
+              ,"function":"reduce_identity"}}
   ]
  ,"inputs":
   [
