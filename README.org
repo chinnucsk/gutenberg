@@ -1,0 +1,18 @@
+#+TITLE:Gutenberg: Riak Map/Reduce Examples in Lisp Flavored Erlang
+#+AUTHOR:Tim Dysinger
+#+EMAIL:tim@dysinger.net
+
+* Dependencies
+  - Rebar
+* Build
+  - rebar get-deps
+  - rebar compile
+* Install
+  - Configure Riak
+    - Update riak_kv settings with the path to /path/to/gutenberg/ebin, eg:
+      {riak_kv, {add_paths, ["/Users/tim/Projects/gutenberg/ebin"]}}
+* Run
+  - Boot Riak
+  - Run Setup & Test
+    - ./bin/setup.sh
+    - ./bin/test.sh
