@@ -13,44 +13,44 @@
 
 ;; internal funs
 
-(defun text_from_obj
+(defun text
   [obj]
   (binary_to_list (get_value obj)))
 
-(defun words_from_text
+(defun words
   [text]
   (lc [(<- word (lc [(<- bin (split text '"[^\\w]+"))]
                   (to_lower (binary_to_list bin))))
        (> (length word) 1)]
     (list_to_binary word)))
 
-(defun word_tuples
+(defun tuples
   [words]
   (lc [(<- word words)]
     (tuple word 1)))
 
-(defun update_count
+(defun update
   ([(tuple word count) dict]
    (dupdate word count dict)))
 
-(defun compare_count
+(defun compare
   ([(tuple _ count0) (tuple _ count1)]
    (>= count0 count1)))
 
-(defun reduce_words
+(defun reduce
   [words]
-  (dlist (foldl (fun update_count 2) (dnew) words)))
+  (dlist (foldl (fun update 2) (dnew) words)))
 
-(defun sort_words
+(defun sort
   [words]
-  (sort (fun compare_count 2) words))
+  (sort (fun compare 2) words))
 
 ;; exported funs
 
 (defun map_word_count
   [obj _ _]
-  (word_tuples (words_from_text (text_from_obj obj))))
+  (tuples (words (text obj))))
 
 (defun reduce_word_count
   [words _]
-  (sort_words (reduce_words words)))
+  (sort (reduce words)))
