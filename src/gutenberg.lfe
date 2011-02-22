@@ -2,6 +2,7 @@
   (import
    (from riak_object (get_value 1))
    (from re (split 2))
+   (from string (to_lower 1))
    (from lists (unmerge 1) (foldl 3) (sort 2))
    (rename dict
            ((to_list 1) dlist)
@@ -18,8 +19,14 @@
 
 (defun words_from_text
   [text]
-  (lc [(<- word (split text '"[^\\w]+"))
-       (/= #B() word)]
+  (lc [(<- word (lc [(<- bin (split text '"[^\\w]+"))]
+                  (to_lower (binary_to_list bin))))
+       (> (length word) 1)]
+    (list_to_binary word)))
+
+(defun word_tuples
+  [words]
+  (lc [(<- word words)]
     (tuple word 1)))
 
 (defun update_count
@@ -42,7 +49,7 @@
 
 (defun map_word_count
   [obj _ _]
-  (words_from_text (text_from_obj obj)))
+  (word_tuples (words_from_text (text_from_obj obj))))
 
 (defun reduce_word_count
   [words _]
