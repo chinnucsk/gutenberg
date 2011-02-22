@@ -9,7 +9,7 @@ curl -v -X POST \
   [
     {"map":{"language":"erlang"
            ,"module":"gutenberg"
-           ,"function":"map_word_count"}}
+           ,"function":"map_words"}}
    ,{"reduce":{"language":"erlang"
               ,"module":"gutenberg"
               ,"function":"reduce_word_count"}}
