@@ -1,6 +1,6 @@
 #!/bin/sh
 
-curl -v -X POST \
+curl -X POST \
     -H "accept: application/json" \
     -H "content-type: application/json" \
     http://127.0.0.1:8098/mapred --data @-<<EOF
@@ -12,10 +12,7 @@ curl -v -X POST \
            ,"function":"map_words"}}
    ,{"reduce":{"language":"erlang"
               ,"module":"gutenberg"
-              ,"function":"reduce_word_count"}}
-   ,{"reduce":{"language":"erlang"
-              ,"module":"riak_kv_mapreduce"
-              ,"function":"reduce_identity"}}
+              ,"function":"reduce_count"}}
   ]
  ,"inputs":
   [
@@ -41,10 +38,11 @@ curl -v -X POST \
    ,["book","treasure-island"]
    ,["book","the-return-of-sherlock-holmes"]
    ,["book","sense-and-sensibility"]
-   ,["book","through-the-looking-glass"]   
+   ,["book","through-the-looking-glass"]
    ,["book","hamlet"]
    ,["book","walden"]
    ,["book","frankenstein"]
   ]
+ ,"timeout": 120000
 }
 EOF
