@@ -4,6 +4,7 @@
  [
   {description, "Gutenberg: Riak Map/Reduce Examples in Lisp Flavored Erlang"},
   {vsn, "1"},
+  {modules, [gutenberg]},
   {registered, []},
   {applications, [
                   kernel,
