@@ -9,14 +9,14 @@
            ((to_list 1) dict->list)
            ((update_counter 3) dict-inc)
            ((from_list 1) list->dict)
-           ((fetch_keys 1) dict-keys))
+           ((fetch_keys 1) dict->keys))
    (rename erlang
            ((binary_to_list 1) bin->list)
            ((list_to_binary 1) list->bin)))
   (export (map_words 3)
-          (reduce_count_words 2)
-          (reduce_uniq_words 2)
-          (reduce_top_words 2)))
+          (reduce_count 2)
+          (reduce_set 2)
+          (reduce_take 2)))
 
 ;; internal funs
 
@@ -34,10 +34,10 @@
   ([[word count] dict]
    (dict-inc word count dict)))
 
-(defun count
-  ;; folds the word counts [[word,n]] -> [{word,n}]
+(defun merge
+  ;; folds the word counts [[word,n]] -> dict
   [words]
-  (dict->list (foldl (fun word-inc 2) (make-dict) words)))
+  (foldl (fun word-inc 2) (make-dict) words))
 
 (defun compare
   ;; compares two word counts (used by sort/2)
@@ -67,21 +67,23 @@
   [object keydata arg]
   (words (riak-value object)))
 
-(trace
- (defun reduce_count_words
+(defun reduce_count
   ;; fold over all word counts [[word,n]] -> [[word,n]]
   [values arg]
-  (sort (fun compare 2) (lists (count values)))))
+  (sort (fun compare 2) (lists (dict->list (merge values)))))
+
+(defun reduce_set
+  ;; reduce words into a set [[word,n]] -> [word]
+  [values arg]
+  (sort (dict->keys (merge values))))
 
 (trace
- (defun reduce_uniq_words
-   ;; reduce words into a unique list [[word,n]] -> [word]
-   [words arg]
-   (list (sort (dict-keys (list->dict (tuples words)))))))
-
-(trace
- (defun reduce_top_words
-   ;; reduce words into a top 'arg' list [[word,n]] -> [[word,n]]
+ ;; FIXME this doesn't work
+ ;; it works from the repl
+ ;; and trace shows inputs and output correct
+ ;; but riak bombs with 'badarg'
+ (defun reduce_take
+   ;; return the first 'arg' of the list
    [values arg]
-   (let [((tuple first rest) (split arg values))]
-     first)))
+   (let [((tuple l1 l2) (split arg values))]
+     l1)))
