@@ -15,4 +15,4 @@
   - Boot Riak
   - Run Setup & Test
     - ./bin/setup.sh
-    - ./bin/test.sh
+    - ./bin/word_count.sh
