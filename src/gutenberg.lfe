@@ -1,54 +1,69 @@
 (defmodule gutenberg
   (import
-   (from riak_object (get_value 1))
    (from re (split 2))
    (from string (to_lower 1))
-   (from lists (unmerge 1) (foldl 3) (sort 1) (sort 2))
-   (from dict (new 0) (get_keys 1) (update_counter 3)
-         (from_list 1) (to_list 1)))
+   (from lists (foldl 3) (sort 1) (sort 2) (append 2))
+   (rename riak_object ((get_value 1) riak-value))
+   (rename dict
+           ((new 0) make-dict)
+           ((to_list 1) dict->list)
+           ((update_counter 3) dict-inc)
+           ((from_list 1) list->dict)
+           ((fetch_keys 1) dict-keys))
+   (rename erlang
+           ((binary_to_list 1) bin->list)
+           ((list_to_binary 1) list->bin)))
   (export (map_words 3)
-          (reduce_word_count 2)))
+          (reduce_count 2)))
 
 ;; internal funs
 
-(defun text
-  [obj]
-  (binary_to_list (get_value obj)))
+(include-file "include/trace.lfe")
 
 (defun words
+  ;; takes a binary text string & returns a list of binary [word,1] pairs
   [text]
-  (lc [(<- word (lc [(<- bin (split text '"[^\\w]+"))]
-                  (to_lower (binary_to_list bin))))
-       (> (length word) 1)]
-    (list_to_binary word)))
+  (lc [(<- word (split (to_lower (bin->list text)) '"[^a-z]+"))
+       (/= #B() word)]
+    (list word 1)))
 
-(defun word_tuples
+(defun word-inc
+  ;; increments the word by count in given dict
+  ([[word count] dict]
+   (dict-inc word count dict)))
+
+(defun count
+  ;; folds the word counts into a list of word, count pairs
   [words]
-  (lc [(<- word words)]
-    (tuple word 1)))
+  (dict->list (foldl (fun word-inc 2) (make-dict) words)))
 
-(defun update_count
-  ([(tuple word count) dict]
-   (update_counter word count dict)))
-
-(defun compare_count
-  ([(tuple _ count0) (tuple _ count1)]
+(defun compare
+  ;; compares two word counts to see which is more (used by sort/2)
+  ([[_ count0] [_ count1]]
    (>= count0 count1)))
 
-(defun reduce_tuples
-  [words]
-  (to_list (foldl (fun update_count 2) (new) words)))
+(defun lists
+  ;; converts [{k,v}] -> [[k,v]]
+  [tuples]
+  (lc [(<- t tuples)]
+    (let [((tuple key value) t)]
+      (list key value))))
 
-(defun sort_count
-  [words]
-  (sort (fun compare_count 2) words))
+(defun tuples
+  ;; converts [[k,v]] -> [{k,v}]
+  [lists]
+  (lc [(<- l lists)]
+    (let [([key value] l)]
+      (tuple key value))))
 
 ;; exported funs
 
 (defun map_words
-  [obj _ _]
-  (word_tuples (words (text obj))))
+  ;; map over all documents [obj] -> [[word,1]]
+  [obj keydata args]
+  (words (riak-value obj)))
 
-(defun reduce_word_count
-  [words _]
-  (sort_count (reduce_tuples words)))
+(defun reduce_count
+  ;; fold over all word counts [[word,n]] -> [[word,n]]
+  [words args]
+  (sort (fun compare 2) (lists (count words))))
