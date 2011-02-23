@@ -14,7 +14,7 @@
            ((binary_to_list 1) bin->list)
            ((list_to_binary 1) list->bin)))
   (export (map_words 3)
-          (reduce_count 2)))
+          (reduce_word_count 2)))
 
 ;; internal funs
 
@@ -63,7 +63,7 @@
   [obj keydata args]
   (words (riak-value obj)))
 
-(defun reduce_count
+(defun reduce_word_count
   ;; fold over all word counts [[word,n]] -> [[word,n]]
   [words args]
   (sort (fun compare 2) (lists (count words))))
