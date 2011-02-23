@@ -12,7 +12,7 @@ curl -X POST \
            ,"function":"map_words"}}
    ,{"reduce":{"language":"erlang"
               ,"module":"gutenberg"
-              ,"function":"reduce_count_words"}}
+              ,"function":"reduce_set"}}
   ]
  ,"inputs":
   [

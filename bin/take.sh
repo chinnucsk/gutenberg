@@ -23,7 +23,10 @@ curl -X POST \
            ,"function":"map_words"}}
    ,{"reduce":{"language":"erlang"
               ,"module":"gutenberg"
-              ,"function":"reduce_top_words"
+              ,"function":"reduce_set"}}
+   ,{"reduce":{"language":"erlang"
+              ,"module":"gutenberg"
+              ,"function":"reduce_take"
               ,"arg":3}}
   ]
  ,"inputs":
