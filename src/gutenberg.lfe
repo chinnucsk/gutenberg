@@ -38,9 +38,11 @@
   (dict->list (foldl (fun word-inc 2) (make-dict) words)))
 
 (defun compare
-  ;; compares two word counts to see which is more (used by sort/2)
-  ([[_ count0] [_ count1]]
-   (>= count0 count1)))
+  ;; compares two word counts (used by sort/2)
+  ([[word0 count0] [word1 count1]]
+   (or (> count0 count1)
+       (and (=:= count0 count1)
+            (< word0 word1)))))
 
 (defun lists
   ;; converts [{k,v}] -> [[k,v]]
