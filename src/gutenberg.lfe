@@ -1,8 +1,8 @@
 (defmodule gutenberg
   (import
-   (from re (split 2))
+   (rename re ((split 2) re-split))
    (from string (to_lower 1))
-   (from lists (foldl 3) (sort 1) (sort 2) (append 2))
+   (from lists (foldl 3) (sort 1) (sort 2) (append 2) (split 2))
    (rename riak_object ((get_value 1) riak-value))
    (rename dict
            ((new 0) make-dict)
@@ -14,16 +14,18 @@
            ((binary_to_list 1) bin->list)
            ((list_to_binary 1) list->bin)))
   (export (map_words 3)
-          (reduce_word_count 2)))
+          (reduce_count_words 2)
+          (reduce_uniq_words 2)
+          (reduce_top_words 2)))
 
 ;; internal funs
 
 (include-file "include/trace.lfe")
 
 (defun words
-  ;; takes a binary text string & returns a list of binary [word,1] pairs
+  ;; maps a text doc to words [binary()] -> [[word,1]]
   [text]
-  (lc [(<- word (split (to_lower (bin->list text)) '"[^a-z]+"))
+  (lc [(<- word (re-split (to_lower (bin->list text)) '"[^a-z]+"))
        (/= #B() word)]
     (list word 1)))
 
@@ -33,7 +35,7 @@
    (dict-inc word count dict)))
 
 (defun count
-  ;; folds the word counts into a list of word, count pairs
+  ;; folds the word counts [[word,n]] -> [{word,n}]
   [words]
   (dict->list (foldl (fun word-inc 2) (make-dict) words)))
 
@@ -61,11 +63,25 @@
 ;; exported funs
 
 (defun map_words
-  ;; map over all documents [obj] -> [[word,1]]
-  [obj keydata args]
-  (words (riak-value obj)))
+  ;; map over all documents [object] -> [[word,1]]
+  [object keydata arg]
+  (words (riak-value object)))
 
-(defun reduce_word_count
+(trace
+ (defun reduce_count_words
   ;; fold over all word counts [[word,n]] -> [[word,n]]
-  [words args]
-  (sort (fun compare 2) (lists (count words))))
+  [values arg]
+  (sort (fun compare 2) (lists (count values)))))
+
+(trace
+ (defun reduce_uniq_words
+   ;; reduce words into a unique list [[word,n]] -> [word]
+   [words arg]
+   (list (sort (dict-keys (list->dict (tuples words)))))))
+
+(trace
+ (defun reduce_top_words
+   ;; reduce words into a top 'arg' list [[word,n]] -> [[word,n]]
+   [values arg]
+   (let [((tuple first rest) (split arg values))]
+     first)))
