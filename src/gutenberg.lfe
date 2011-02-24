@@ -26,7 +26,7 @@
   [text]
   (lc [(<- word (split (to_lower (bin->list text)) '"[^a-z]+"))
        (/= #B() word)]
-    (list word 1)))
+    word))
 
 (defun word-inc
   ;; increments the word by count in given dict
