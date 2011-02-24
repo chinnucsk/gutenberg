@@ -1,9 +1,9 @@
 (defmodule gutenberg
   (import
-   (rename re ((split 2) re-split))
+   (from riak_object (get_value 1))
    (from string (to_lower 1))
-   (from lists (foldl 3) (sort 1) (sort 2) (append 2) (split 2))
-   (rename riak_object ((get_value 1) riak-value))
+   (from re (split 2))
+   (from lists (foldl 3) (sort 1) (sort 2))
    (rename dict
            ((new 0) make-dict)
            ((to_list 1) dict->list)
@@ -24,7 +24,7 @@
 (defun words
   ;; maps a text doc to words [binary()] -> [[word,1]]
   [text]
-  (lc [(<- word (re-split (to_lower (bin->list text)) '"[^a-z]+"))
+  (lc [(<- word (split (to_lower (bin->list text)) '"[^a-z]+"))
        (/= #B() word)]
     (list word 1)))
 
@@ -66,7 +66,7 @@
 (defun map_words
   ;; map over all documents [object] -> [[word,1]]
   [object keydata arg]
-  (words (riak-value object)))
+  (words (get_value object)))
 
 (defun reduce_count
   ;; fold over all word counts [[word,n]] -> [[word,n]]
