@@ -15,8 +15,7 @@
            ((list_to_binary 1) list->bin)))
   (export (map_words 3)
           (reduce_count 2)
-          (reduce_set 2)
-          (reduce_take 2)))
+          (reduce_set 2)))
 
 ;; internal funs
 
@@ -76,14 +75,3 @@
   ;; reduce words into a set [[word,n]] -> [word]
   [values arg]
   (sort (dict->keys (merge values))))
-
-(trace
- ;; FIXME this doesn't work
- ;; it works from the repl
- ;; and trace shows inputs and output correct
- ;; but riak bombs with 'badarg'
- (defun reduce_take
-   ;; return the first 'arg' of the list
-   [values arg]
-   (let [((tuple l1 l2) (split arg values))]
-     l1)))
