@@ -31,7 +31,9 @@
 (defun word-inc
   ;; increments the word by count in given dict
   ([[word count] dict]
-   (dict-inc word count dict)))
+   (dict-inc word count dict))
+  ([word dict]
+   (dict-inc word 1 dict)))
 
 (defun merge
   ;; folds the word counts [[word,n]] -> dict
