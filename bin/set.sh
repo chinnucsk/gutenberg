@@ -11,8 +11,11 @@ curl -X POST \
            ,"module":"gutenberg"
            ,"function":"map_words"}}
    ,{"reduce":{"language":"erlang"
-              ,"module":"gutenberg"
-              ,"function":"reduce_set"}}
+              ,"module":"riak_kv_mapreduce"
+              ,"function":"reduce_set_union"}}
+   ,{"reduce":{"language":"erlang"
+              ,"module":"riak_kv_mapreduce"
+              ,"function":"reduce_sort"}}
   ]
  ,"inputs":
   [

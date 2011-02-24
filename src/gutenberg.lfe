@@ -14,8 +14,7 @@
            ((binary_to_list 1) bin->list)
            ((list_to_binary 1) list->bin)))
   (export (map_words 3)
-          (reduce_count 2)
-          (reduce_set 2)))
+          (reduce_count 2)))
 
 ;; internal funs
 
@@ -72,8 +71,3 @@
   ;; fold over all word counts [[word,n]] -> [[word,n]]
   [values arg]
   (sort (fun compare 2) (lists (dict->list (merge values)))))
-
-(defun reduce_set
-  ;; reduce words into a set [[word,n]] -> [word]
-  [values arg]
-  (sort (dict->keys (merge values))))
