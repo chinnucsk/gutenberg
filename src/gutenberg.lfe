@@ -63,11 +63,11 @@
 ;; exported funs
 
 (defun map_words
-  ;; map over all documents [object] -> [[word,1]]
+  ;; maps documents -> [word]
   [object keydata arg]
   (words (get_value object)))
 
 (defun reduce_count
-  ;; fold over all word counts [[word,n]] -> [[word,n]]
+  ;; fold over word counts [[word,1]] -> [[word,n]]
   [values arg]
   (sort (fun compare 2) (lists (dict->list (merge values)))))
