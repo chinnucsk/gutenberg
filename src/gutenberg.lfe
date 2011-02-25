@@ -21,7 +21,7 @@
 ;; internal funs
 
 (defun words
-  ;; maps a text doc to words [binary()] -> [[word,1]]
+  ;; maps a text doc to words binary() -> [[word]]
   [text]
   (lc [(<- word (split (to_lower (bin->list text)) '"[^a-z]+"))
        (/= #B() word)]
