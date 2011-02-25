@@ -46,6 +46,8 @@
        (and (=:= count0 count1)
             (< word0 word1)))))
 
+;; conversion funs
+
 (defun lists
   ;; converts [{k,v}] -> [[k,v]]
   [tuples]
