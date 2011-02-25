@@ -62,7 +62,7 @@
     (let [([key value] l)]
       (tuple key value))))
 
-;; exported funs
+;; map/reduce funs
 
 (defun map_words
   ;; maps documents -> [word]
