@@ -16,9 +16,9 @@
   (export (map_words 3)
           (reduce_count 2)))
 
-;; internal funs
-
 (include-file "include/trace.lfe")
+
+;; internal funs
 
 (defun words
   ;; maps a text doc to words [binary()] -> [[word,1]]
