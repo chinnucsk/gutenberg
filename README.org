@@ -13,7 +13,12 @@
       {riak_kv, {add_paths, ["/Users/tim/Projects/gutenberg/ebin"]}}
 * Run
   - Boot Riak
-  - Run Setup & Test
+    - cd /path/to/riak/rel/riak && ./bin/riak console
+  - Add books to Riak
     - ./bin/setup.sh
+  - Run the curl/json map/reduce jobs
     - ./bin/count.sh
     - ./bin/set.sh
+  - Run the same jobs from the erlang/protobufs client
+    - ./bin/test.escript count
+    - ./bin/test.escript set
