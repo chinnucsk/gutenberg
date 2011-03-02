@@ -1,3 +1,5 @@
+(include-file "include/trace.lfe")
+
 (defmodule gutenberg
   (import
    (from riak_object (get_value 1))
@@ -15,8 +17,6 @@
            ((list_to_binary 1) list->bin)))
   (export (map_words 3)
           (reduce_count 2)))
-
-(include-file "include/trace.lfe")
 
 ;; internal funs
 
