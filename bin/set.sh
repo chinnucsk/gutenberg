@@ -5,8 +5,7 @@ curl -X POST \
     -H "content-type: application/json" \
     http://127.0.0.1:8098/mapred --data @-<<EOF
 {
-  "query":
-  [
+  "query": [
     {"map":{"language":"erlang"
            ,"module":"gutenberg"
            ,"function":"map_words"}}
@@ -17,8 +16,7 @@ curl -X POST \
               ,"module":"riak_kv_mapreduce"
               ,"function":"reduce_sort"}}
   ]
- ,"inputs":
-  [
+ ,"inputs": [
     ["book","adventures-of-huckleberry-finn"]
    ,["book","the-adventures-of-tom-sawyer"]
    ,["book","around-the-world-in-80-days"]
